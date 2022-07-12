@@ -32,12 +32,19 @@ def main():
     fps = 60
     level = 1
     lives = 5
+    main_font = pygame.font.SysFont("comicsans", 50)
 
     clock = pygame.time.Clock()
 
     # local scope function
     def redraw_window():
         WIN.blit(BG, (0, 0))  # top left of window
+        # draw text
+        lives_label = main_font.render(f"Lives: {lives}", 1, (255, 255, 255))
+        level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
+        WIN.blit(lives_label, (10, 10))
+        WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
+
         pygame.display.update()
 
     while run:
