@@ -38,7 +38,22 @@ class Ship:
         self.cool_down_counter = 0
 
     def draw(self, window):
-        pygame.draw.rect(window, (255, 0, 0), (self.x, self.y, 50, 50), 0)
+        window.blit(self.ship_img, (self.x, self.y))
+
+    def get_width(self):
+        return self.ship_img.get_width()
+
+    def get_height(self):
+        return self.ship_img.get_height()
+
+
+class Player(Ship):  # inherits ship
+    def __init__(self, x, y, health=100):
+        super().__init__(x, y, health)
+        self.ship_img = YELLOW_SPACE_SHIP
+        self.laser_img = YELLOW_LASER
+        self.mask = pygame.mask.from_surface(self.ship_img)  # take ship_img pixels (for accurate hitbox)
+        self.max_health = health
 
 
 def main():
@@ -49,7 +64,7 @@ def main():
     main_font = pygame.font.SysFont("comicsans", 50)
     player_velocity = 5
 
-    ship = Ship(300, 650)
+    player = Player(300, 650)
 
     clock = pygame.time.Clock()
 
@@ -62,7 +77,7 @@ def main():
         WIN.blit(lives_label, (10, 10))
         WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
 
-        ship.draw(WIN)
+        player.draw(WIN)
 
         pygame.display.update()
 
@@ -75,14 +90,14 @@ def main():
                 run = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a] and ship.x - player_velocity > 0:  # move left
-            ship.x -= player_velocity
-        if keys[pygame.K_d] and ship.x + player_velocity + 50 < WIDTH:  # move right
-            ship.x += player_velocity
-        if keys[pygame.K_w] and ship.y - player_velocity > 0:  # move up
-            ship.y -= player_velocity
-        if keys[pygame.K_s] and ship.y + player_velocity + 50 < HEIGHT:  # move down
-            ship.y += player_velocity
+        if keys[pygame.K_a] and player.x - player_velocity > 0:  # move left
+            player.x -= player_velocity
+        if keys[pygame.K_d] and player.x + player_velocity + player.get_width() < WIDTH:  # move right
+            player.x += player_velocity
+        if keys[pygame.K_w] and player.y - player_velocity > 0:  # move up
+            player.y -= player_velocity
+        if keys[pygame.K_s] and player.y + player_velocity + player.get_height() < HEIGHT:  # move down
+            player.y += player_velocity
 
 
 if __name__ == '__main__':
