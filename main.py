@@ -1,6 +1,5 @@
 import pygame
 import os
-import time
 import random
 pygame.font.init()
 
@@ -26,6 +25,7 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
 
+
 class Laser:
     def __init__(self, x, y, img):
         self.x = x
@@ -40,7 +40,7 @@ class Laser:
         self.y += velocity
 
     def off_screen(self, height):
-        return not (self.y <= height and self.y >= 0)
+        return not (height >= self.y >= 0)
 
     def collision(self, obj):
         return collide(self, obj)
@@ -97,7 +97,7 @@ class Player(Ship):  # inherits ship
         super().__init__(x, y, health)
         self.ship_img = YELLOW_SPACE_SHIP
         self.laser_img = YELLOW_LASER
-        self.mask = pygame.mask.from_surface(self.ship_img)  # take ship_img pixels (for accurate hitbox)
+        self.mask = pygame.mask.from_surface(self.ship_img)  # take ship_img pixels (for accurate hit box)
         self.max_health = health
 
     def move_lasers(self, velocity, objs):
@@ -177,8 +177,8 @@ def main():
     def redraw_window():
         WIN.blit(BG, (0, 0))  # top left of window
         # draw text
-        lives_label = main_font.render(f"Lives: {lives}", 1, (255, 255, 255))
-        level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
+        lives_label = main_font.render(f"Lives: {lives}", True, (255, 255, 255))
+        level_label = main_font.render(f"Level: {level}", True, (255, 255, 255))
         WIN.blit(lives_label, (10, 10))
         WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
 
@@ -188,7 +188,7 @@ def main():
         player.draw(WIN)
 
         if lost:
-            lost_label = lost_font.render("You Lost!!", 1, (255, 255, 255))
+            lost_label = lost_font.render("You Lost!!", True, (255, 255, 255))
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
 
         pygame.display.update()
@@ -210,7 +210,8 @@ def main():
             level += 1
             wave_length += 5
             for i in range(wave_length):
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100),
+                              random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
 
         for event in pygame.event.get():
@@ -251,7 +252,7 @@ def main_menu():
     run = True
     while run:
         WIN.blit(BG, (0, 0))
-        title_label = title_font.render("Press the mouse to begin...", 1, (255, 255, 255))
+        title_label = title_font.render("Press the mouse to begin...", True, (255, 255, 255))
         WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 350))
         pygame.display.update()
         for event in pygame.event.get():
